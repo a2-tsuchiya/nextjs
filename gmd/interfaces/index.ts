@@ -5,6 +5,15 @@
 // import { User } from 'path/to/interfaces';
 
 export type User = {
-  id: number
-  name: string
+	id: number
+	name: string
+}
+export interface IData {
+	userId: number
+	id: number
+	title: string
+	body: string
+}
+export interface IPage {
+	data: IData[]
 }
