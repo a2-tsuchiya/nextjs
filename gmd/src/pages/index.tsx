@@ -1,14 +1,7 @@
 import axios from 'axios'
 import useSWR from 'swr'
-import Link from 'next/link'
+// import Link from 'next/link'
 // import Layout from 'components/Layout'
-
-import Demo from 'components/Demo'
-import { Blog } from 'components/SWR'
-import BreadCrumb from 'components/BreadCrumb'
-
-import Container from '@material-ui/core/Container'
-import Box from '@material-ui/core/Box'
 
 import { GetStaticProps } from 'next'
 import { IPage, IData } from 'interfaces/index'
