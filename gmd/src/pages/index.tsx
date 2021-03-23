@@ -1,6 +1,6 @@
 import axios from 'axios'
 import useSWR from 'swr'
-// import Link from 'next/link'
+import Link from 'next/link'
 // import Layout from 'components/Layout'
 
 import { GetStaticProps } from 'next'
@@ -23,7 +23,11 @@ const IndexPage: React.FC<IPage> = (props) => {
 		<div>
 			<ul>
 				{data.map((item) => (
-					<li key={item.id}>{item.title}</li>
+					<li key={item.id}>
+						<Link href={`/products/${item.id}`}>
+							<a>{item.title}</a>
+						</Link>
+					</li>
 				))}
 			</ul>
 		</div>
