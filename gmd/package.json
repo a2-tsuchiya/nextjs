@@ -4,7 +4,8 @@
 	"scripts": {
 		"dev": "next dev",
 		"debug": "NODE_OPTIONS='--inspect-brk' next dev",
-		"build": "GITHUB_PAGES=true next build && next export",
+		"build": "next build",
+		"build:git": "GITHUB_PAGES=true next build && next export",
 		"deploy": "touch ./out/.nojekyll && gh-pages -d out",
 		"start": "next start",
 		"type-check": "tsc"
