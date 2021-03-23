@@ -19,12 +19,12 @@ const fetchList: IFetchList = async (url) => {
 	return Promise.resolve(res.data)
 }
 // const fetchBlog = async (url: string, id: number): Promise<IData> => {
-const fetchBlog = async (...args: any): Promise<IData | void> => {
-	console.log(args)
-	// const res = await axios.get<IData>(`${url}/${id}`)
-	// return Promise.resolve(res.data)
-	return Promise.resolve()
-}
+// const fetchBlog = async (...args: any): Promise<IData | void> => {
+// 	console.log(args)
+// 	// const res = await axios.get<IData>(`${url}/${id}`)
+// 	// return Promise.resolve(res.data)
+// 	return Promise.resolve()
+// }
 
 export const Blog: React.FC = () => {
 	const url = `https://jsonplaceholder.typicode.com/posts`
