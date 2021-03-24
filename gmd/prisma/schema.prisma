@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model tbl_bujiness_item {
+  bujiness_item_id        String           @id @db.VarChar(30)
+  bujiness_item_name      String
+  bujiness_item_name_kana String?
+  profit_rate             Decimal          @db.Decimal(5, 2)
+  created_date            DateTime         @default(now()) @db.Timestamp(3)
+  created_user            String           @default("root") @db.VarChar(30)
+  updated_date            DateTime         @db.Timestamp(3)
+  updated_user            String           @default("root") @db.VarChar(30)
+  invalid_flag            Boolean          @default(false)
+  note                    String?          @db.Text
+  cancel_rule_id          String           @db.VarChar(30)
+  client_rule_id          String           @db.VarChar(30)
+  tbl_cancel_rule         tbl_cancel_rule  @relation(fields: [cancel_rule_id], references: [cancel_rule_id])
+  tbl_client_rule         tbl_client_rule  @relation(fields: [client_rule_id], references: [client_rule_id])
+  tbl_sales_item          tbl_sales_item[]
+
+  @@index([cancel_rule_id], name: "cancel_rule_id")
+  @@index([client_rule_id], name: "client_rule_id")
+}
+
+model tbl_cancel_rule {
+  cancel_rule_id    String              @id @db.VarChar(30)
+  cancel_rule       String
+  created_date      DateTime            @default(now()) @db.Timestamp(3)
+  created_user      String              @default("root") @db.VarChar(30)
+  updated_date      DateTime            @db.Timestamp(3)
+  updated_user      String              @default("root") @db.VarChar(30)
+  invalid_flag      Boolean             @default(false)
+  note              String?             @db.Text
+  tbl_bujiness_item tbl_bujiness_item[]
+}
+
+model tbl_category {
+  category_id    String        @id @db.VarChar(30)
+  category_name  String
+  directory_path String?       @db.Text
+  created_date   DateTime      @default(now()) @db.Timestamp(3)
+  created_user   String        @default("root") @db.VarChar(30)
+  updated_date   DateTime      @db.Timestamp(3)
+  updated_user   String        @default("root") @db.VarChar(30)
+  invalid_flag   Boolean       @default(false)
+  note           String?       @db.Text
+  domain_id      String        @db.VarChar(30)
+  tbl_domain     tbl_domain    @relation(fields: [domain_id], references: [domain_id])
+  tbl_product    tbl_product[]
+
+  @@index([domain_id], name: "domain_id")
+}
+
+model tbl_client_rule {
+  client_rule_id    String              @id @db.VarChar(30)
+  client_rule       String
+  created_date      DateTime            @default(now()) @db.Timestamp(3)
+  created_user      String              @default("root") @db.VarChar(30)
+  updated_date      DateTime            @db.Timestamp(3)
+  updated_user      String              @default("root") @db.VarChar(30)
+  invalid_flag      Boolean             @default(false)
+  note              String              @db.Text
+  tbl_bujiness_item tbl_bujiness_item[]
+}
+
+model tbl_department {
+  department_id        String           @id @db.VarChar(30)
+  department_name      String
+  created_date         DateTime         @default(now()) @db.Timestamp(3)
+  created_user         String           @default("root") @db.VarChar(30)
+  updated_date         DateTime         @db.Timestamp(3)
+  updated_user         String           @default("root") @db.VarChar(30)
+  invalid_flag         Boolean          @default(false)
+  note                 String?          @db.Text
+  department_parent_id String?          @db.VarChar(30)
+  tbl_product          tbl_product[]
+  tbl_sales_item       tbl_sales_item[]
+}
+
+model tbl_domain {
+  domain_id      String         @id @db.VarChar(30)
+  domain_name    String
+  directory_path String?        @db.Text
+  created_date   DateTime       @default(now()) @db.Timestamp(3)
+  created_user   String         @default("root") @db.VarChar(30)
+  updated_date   DateTime       @db.Timestamp(3)
+  updated_user   String         @default("root") @db.VarChar(30)
+  invalid_flag   Boolean        @default(false)
+  note           String?        @db.Text
+  tbl_category   tbl_category[]
+}
+
+model tbl_product {
+  product_id        String         @id @db.VarChar(30)
+  product_name      String
+  product_name_kana String?
+  profit_rate       Decimal?       @db.Decimal(5, 2)
+  created_date      DateTime       @default(now()) @db.Timestamp(3)
+  created_user      String         @default("root") @db.VarChar(30)
+  updated_date      DateTime       @db.Timestamp(3)
+  updated_user      String         @default("root") @db.VarChar(30)
+  invalid_flag      Boolean        @default(false)
+  note              String?        @db.Text
+  category_id       String         @db.VarChar(30)
+  supplier_id       String         @db.VarChar(30)
+  supplier_org_id   String         @db.VarChar(30)
+  tbl_category      tbl_category   @relation(fields: [category_id], references: [category_id])
+  tbl_supplier      tbl_supplier   @relation(fields: [supplier_id], references: [supplier_id])
+  tbl_department    tbl_department @relation(fields: [supplier_org_id], references: [department_id])
+  tbl_subbrand      tbl_subbrand[]
+
+  @@index([category_id], name: "category_id")
+  @@index([supplier_id], name: "supplier_id")
+  @@index([supplier_org_id], name: "supplier_org_id")
+}
+
+model tbl_sales_item {
+  sales_item_id     String            @id @db.VarChar(30)
+  sales_item_name   String
+  menu_name         String
+  cost_type         String            @db.VarChar(30)
+  bujiness_type     String            @db.VarChar(30)
+  ad_type           String            @db.VarChar(30)
+  profit_rate       Decimal?          @db.Decimal(5, 2)
+  created_date      DateTime          @default(now()) @db.Timestamp(3)
+  created_user      String            @default("root") @db.VarChar(30)
+  updated_date      DateTime          @db.Timestamp(3)
+  updated_user      String            @default("root") @db.VarChar(30)
+  invalid_flag      Boolean           @default(false)
+  note              String?           @db.Text
+  bujiness_item_id  String            @db.VarChar(30)
+  supplier_id       String            @db.VarChar(30)
+  supplier_org_id   String            @db.VarChar(30)
+  tbl_bujiness_item tbl_bujiness_item @relation(fields: [bujiness_item_id], references: [bujiness_item_id])
+  tbl_supplier      tbl_supplier      @relation(fields: [supplier_id], references: [supplier_id])
+  tbl_department    tbl_department    @relation(fields: [supplier_org_id], references: [department_id])
+
+  @@index([bujiness_item_id], name: "bujiness_item_id")
+  @@index([supplier_id], name: "supplier_id")
+  @@index([supplier_org_id], name: "supplier_org_id")
+}
+
+model tbl_subbrand {
+  subbrand_id   String      @id @db.VarChar(30)
+  subbrand_name String
+  created_date  DateTime    @default(now()) @db.Timestamp(3)
+  created_user  String      @default("root") @db.VarChar(30)
+  updated_date  DateTime    @db.Timestamp(3)
+  updated_user  String      @default("root") @db.VarChar(30)
+  invalid_flag  Boolean     @default(false)
+  note          String?     @db.Text
+  product_id    String      @db.VarChar(30)
+  tbl_product   tbl_product @relation(fields: [product_id], references: [product_id])
+
+  @@index([product_id], name: "product_id")
+}
+
+model tbl_supplier {
+  supplier_id        String           @id @db.VarChar(30)
+  supplier_division  String           @db.VarChar(30)
+  supplier_name      String
+  supplier_name_kana String?
+  created_date       DateTime         @default(now()) @db.Timestamp(3)
+  created_user       String           @default("root") @db.VarChar(30)
+  updated_date       DateTime         @db.Timestamp(3)
+  updated_user       String           @default("root") @db.VarChar(30)
+  invalid_flag       Boolean          @default(false)
+  note               String?          @db.Text
+  tbl_product        tbl_product[]
+  tbl_sales_item     tbl_sales_item[]
+}
