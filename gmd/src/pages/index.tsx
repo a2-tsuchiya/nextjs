@@ -15,6 +15,12 @@ const IndexPage: React.FC<IPage> = (props) => {
 		initialData: props.data,
 		revalidateOnFocus: false,
 	})
+	const { data: user } = useSWR('/api/users', getUser, {
+		initialData: [] as IUser[],
+		revalidateOnFocus: false,
+	})
+
+	console.log('user', user)
 
 	if (error) return <div>failed to load</div>
 	if (!data) return <div>loading...</div>
@@ -44,6 +50,15 @@ const IndexPage: React.FC<IPage> = (props) => {
 // 	const data: IData[] = res.data
 // 	return { props: { data } }
 // }
+
+interface IUser {
+	id: number
+	name: string
+}
+const getUser = async (url: string): Promise<IUser[]> => {
+	const res = await axios.get<IUser[]>(url)
+	return Promise.resolve(res.data)
+}
 
 /**
  * SSRとCSR（SWR）の併用。fetcherをクライアント/サーバで共有する
