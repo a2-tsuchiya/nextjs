@@ -18,7 +18,9 @@ const IndexPage: React.FC<IPage> = (props) => {
 			revalidateOnFocus: false,
 		}
 	)
-	const { data: category } = useSWR('/api/category', getCategory)
+	const { data: category } = useSWR('/api/category', getCategory, {
+		revalidateOnFocus: false,
+	})
 
 	if (error) return <div>failed to load</div>
 	if (!posts) return <div>loading...</div>
