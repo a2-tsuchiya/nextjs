@@ -5,5 +5,8 @@
   "repository": "git@github.com:a2-tsuchiya/nextjs.git",
   "author": "a2-tsuchiya",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "typescript": "^4.2.3"
+  }
 }

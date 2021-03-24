@@ -2,6 +2,7 @@ import axios from 'axios'
 import useSWR from 'swr'
 import Link from 'next/link'
 // import Layout from 'components/Layout'
+import { tbl_category } from '@prisma/client'
 
 import { GetStaticProps } from 'next'
 import { IPage, IData } from 'interfaces/index'
@@ -17,17 +18,17 @@ const IndexPage: React.FC<IPage> = (props) => {
 			revalidateOnFocus: false,
 		}
 	)
-	const { data: user } = useSWR('/api/users', getUser)
+	const { data: category } = useSWR('/api/category', getCategory)
 
 	if (error) return <div>failed to load</div>
 	if (!posts) return <div>loading...</div>
-	if (!user) return <div>loading...</div>
+	if (!category) return <div>loading...</div>
 
 	return (
 		<div>
 			<ul>
-				{user.map((item) => (
-					<li key={item.id}>{item.name}</li>
+				{category.map((item) => (
+					<li key={item.category_id}>{item.category_name}</li>
 				))}
 			</ul>
 			<ul>
@@ -54,15 +55,21 @@ const IndexPage: React.FC<IPage> = (props) => {
 // 	return { props: { data } }
 // }
 
-interface IUser {
-	id: number
-	name: string
-}
-const getUser = async (url: string): Promise<IUser[]> => {
-	const res = await axios.get<IUser[]>(url)
+const getCategory = async (url: string): Promise<tbl_category[]> => {
+	const res = await axios.get<tbl_category[]>(url)
 	console.log(res.data)
 	return Promise.resolve(res.data)
 }
+
+// interface IUser {
+// 	id: number
+// 	name: string
+// }
+// const getUser = async (url: string): Promise<IUser[]> => {
+// 	const res = await axios.get<IUser[]>(url)
+// 	console.log(res.data)
+// 	return Promise.resolve(res.data)
+// }
 
 /**
  * SSRとCSR（SWR）の併用。fetcherをクライアント/サーバで共有する
