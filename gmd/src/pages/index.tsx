@@ -1,45 +1,40 @@
 import axios from 'axios'
 import useSWR from 'swr'
-import Link from 'next/link'
+// import Link from 'next/link'
 // import Layout from 'components/Layout'
-import { tbl_category } from '@prisma/client'
+import { Category } from '@prisma/client'
 
 import { GetStaticProps } from 'next'
-import { IPage, IData } from 'interfaces/index'
+import { IPage, IProduct } from 'interfaces/index'
+
+// axiosでルートパス設定できるらしい。。
+const url = 'https://qp1ceno1ai.execute-api.ap-northeast-1.amazonaws.com/dev'
 
 const IndexPage: React.FC<IPage> = (props) => {
 	console.log(props)
 
-	const { data: posts, error } = useSWR(
-		'https://jsonplaceholder.typicode.com/posts',
-		fetcher,
-		{
-			initialData: props.data,
-			revalidateOnFocus: false,
-		}
-	)
+	const { data: products, error } = useSWR(`${url}/product`, fetcher, {
+		initialData: props.data,
+		revalidateOnFocus: false,
+	})
 	const { data: category } = useSWR('/api/category', getCategory, {
 		revalidateOnFocus: false,
 	})
 
 	if (error) return <div>failed to load</div>
-	if (!posts) return <div>loading...</div>
+	if (!products) return <div>loading...</div>
 	if (!category) return <div>loading...</div>
 
 	return (
 		<div>
 			<ul>
 				{category.map((item) => (
-					<li key={item.category_id}>{item.category_name}</li>
+					<li key={item.id}>{item.name}</li>
 				))}
 			</ul>
 			<ul>
-				{posts.map((item) => (
-					<li key={item.id}>
-						<Link href={`/products/${item.id}`}>
-							<a>{item.title}</a>
-						</Link>
-					</li>
+				{products.map((item) => (
+					<li key={item.product_category}>{item.product_category}</li>
 				))}
 			</ul>
 		</div>
@@ -57,9 +52,8 @@ const IndexPage: React.FC<IPage> = (props) => {
 // 	return { props: { data } }
 // }
 
-const getCategory = async (url: string): Promise<tbl_category[]> => {
-	const res = await axios.get<tbl_category[]>(url)
-	console.log(res.data)
+const getCategory = async (url: string): Promise<Category[]> => {
+	const res = await axios.get<Category[]>(url)
 	return Promise.resolve(res.data)
 }
 
@@ -78,13 +72,13 @@ const getCategory = async (url: string): Promise<tbl_category[]> => {
  * ビルド時に静的レンダリングして、クライアント側からも動的にレンダリングする
  * @param url
  */
-const fetcher = async (url: string): Promise<IData[]> => {
-	const res = await axios.get<IData[]>(url)
+const fetcher = async (url: string): Promise<IProduct[]> => {
+	const res = await axios.post<IProduct[]>(url)
 	return Promise.resolve(res.data)
 }
 export const getStaticProps: GetStaticProps = async () => {
-	const posts = await fetcher('https://jsonplaceholder.typicode.com/posts')
-	return { props: { posts }, revalidate: 60 }
+	const products = await fetcher(`${url}/product`)
+	return { props: { products }, revalidate: 60 }
 }
 
 export default IndexPage

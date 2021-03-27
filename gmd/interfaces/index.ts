@@ -15,5 +15,8 @@ export interface IData {
 	body: string
 }
 export interface IPage {
-	data: IData[]
+	data: IProduct[]
+}
+export interface IProduct {
+	product_category: string
 }
